@@ -1,6 +1,6 @@
 # Default ignored files
-/java/base/*
-/artifacts/&
+/java/base/
+/artifacts/
 /shelf/
 /out/
 /.idea/
