@@ -4,8 +4,9 @@
 /shelf/
 /out/
 /.idea/
-*test.java
-*Test.java
+*test
+*Test
+*Tester
 *.iml
 /workspace.xml
 # Editor-based HTTP Client requests
