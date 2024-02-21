@@ -1,10 +1,12 @@
 # Default ignored files
-/base/
+/java/base/
 /artifacts/
 /shelf/
 /out/
+/.idea/
 *test.java
 *Test.java
+*.iml
 /workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
