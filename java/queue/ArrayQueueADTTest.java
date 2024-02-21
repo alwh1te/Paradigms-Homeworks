@@ -17,13 +17,13 @@ public class ArrayQueueADTTest {
         }
     }
 
-    public static void main(String[] args) {
-        ArrayQueueADT stack1 = ArrayQueueADT.create();
-        ArrayQueueADT stack2 = ArrayQueueADT.create();
-        fill(stack1, "s1_");
-        System.out.println(ArrayQueueADT.size(stack1));
-        fill(stack2, "s2_");
-        dump(stack1);
-        dump(stack2);
-    }
+//    public static void main(String[] args) {
+//        ArrayQueueADT stack1 = ArrayQueueADT.create();
+//        ArrayQueueADT stack2 = ArrayQueueADT.create();
+//        fill(stack1, "s1_");
+//        System.out.println(ArrayQueueADT.size(stack1));
+//        fill(stack2, "s2_");
+//        dump(stack1);
+//        dump(stack2);
+//    }
 }
