@@ -1,6 +1,7 @@
 package queue;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class ArrayQueueModule {
     private static Object[] elements = new Object[2];
@@ -36,6 +37,18 @@ public class ArrayQueueModule {
     // Post: R = n && n' = n && Inv(n)
     public static int size() {
         return size;
+    }
+
+    // Pred: queue != null && predicate != null
+    // Post: R = count of elements that are a target for predicate
+    public static int countIf(Predicate<Object> predicate) {
+        int ans = 0;
+        for (int i = 0; i < size; i++) {
+            if (predicate.test(elements[(head + i) % elements.length])) {
+                ans++;
+            }
+        }
+        return ans;
     }
 
     // Pre: queue != null && n > 0

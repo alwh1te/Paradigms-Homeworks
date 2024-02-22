@@ -1,6 +1,8 @@
 package queue;
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class ArrayQueue {
     // Inv: forall i=1..n: a'[i] = a[i]
@@ -50,6 +52,18 @@ public class ArrayQueue {
     // Post: R = n && n' = n && Inv(n)
     public int size() {
         return size;
+    }
+
+    // Pred: queue != null && predicate != null
+    // Post: R = count of elements that are a target for predicate
+    public int countIf(Predicate<Object> predicate) {
+        int ans = 0;
+        for (int i = 0; i < size; i++) {
+            if (predicate.test(elements[(head + i) % elements.length])) {
+                ans++;
+            }
+        }
+        return ans;
     }
 
     // Pre: queue != null && n > 0
