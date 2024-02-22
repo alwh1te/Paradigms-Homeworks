@@ -11,11 +11,9 @@ public class ArrayQueueADT {
 
     // Pre: true
     // Post: R.n = 2
-//    public static ArrayQueueADT create() {
-//        ArrayQueueADT queue = new ArrayQueueADT();
-//        queue.elements = new Object[2];
-//        return queue;
-//    }
+    public static ArrayQueueADT create() {
+        return new ArrayQueueADT();
+    }
 
     // Pre: queue != null && element != null
     // Post: n' = n + 1 &&
@@ -29,19 +27,6 @@ public class ArrayQueueADT {
         queue.size++;
     }
 
-    // Pre: queue != null
-    // Post: n' = n && Inv(n)
-    private static void ensureCapacity(ArrayQueueADT queue) {
-        if (queue.size == queue.elements.length) {
-            Object[] newArray = new Object[queue.elements.length * 2];
-            for (int i = 0; i < queue.size; i++) {
-                newArray[i] = queue.elements[(queue.head + i) % queue.elements.length];
-            }
-            queue.elements = newArray;
-            queue.head = 0;
-            queue.tail = queue.size;
-        }
-    }
 
     // Pre: queue != null && n > 0
     // Post: R = a[n] && n' = n - 1 && Inv(n')
@@ -80,5 +65,17 @@ public class ArrayQueueADT {
         queue.size = 0;
         queue.head = 0;
         queue.tail = 0;
+    }
+
+    private static void ensureCapacity(ArrayQueueADT queue) {
+        if (queue.size == queue.elements.length) {
+            Object[] newArray = new Object[queue.elements.length * 2];
+            for (int i = 0; i < queue.size; i++) {
+                newArray[i] = queue.elements[(queue.head + i) % queue.elements.length];
+            }
+            queue.elements = newArray;
+            queue.head = 0;
+            queue.tail = queue.size;
+        }
     }
 }

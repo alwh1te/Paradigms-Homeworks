@@ -1,6 +1,6 @@
 package queue;
 
-public class ArrayQueueADTTest {
+public class MyArrayQueueADTTest {
     public static void fill(ArrayQueueADT queue, String prefix) {
         for (int i = 0; i < 10; i++) {
             ArrayQueueADT.enqueue(queue, prefix + i);
@@ -17,13 +17,12 @@ public class ArrayQueueADTTest {
         }
     }
 
-//    public static void main(String[] args) {
-//        ArrayQueueADT stack1 = ArrayQueueADT.create();
-//        ArrayQueueADT stack2 = ArrayQueueADT.create();
-//        fill(stack1, "s1_");
-//        System.out.println(ArrayQueueADT.size(stack1));
-//        fill(stack2, "s2_");
-//        dump(stack1);
-//        dump(stack2);
-//    }
+    public static void main(String[] args) {
+        ArrayQueueADT stack1 = ArrayQueueADT.create();
+        ArrayQueueADT stack2 = ArrayQueueADT.create();
+        fill(stack1, "s1_");
+        fill(stack2, "s2_");
+        dump(stack1);
+        dump(stack2);
+    }
 }

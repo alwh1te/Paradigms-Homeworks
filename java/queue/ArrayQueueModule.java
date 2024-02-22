@@ -1,6 +1,5 @@
 package queue;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class ArrayQueueModule {
@@ -9,10 +8,16 @@ public class ArrayQueueModule {
     private static int tail = 0;
     private static int size = 0;
 
+    // Pre: queue != null
+    // Post: R = (n = 0) && n' = n && Inv(n)
     public static boolean isEmpty() {
         return size == 0;
     }
 
+    // Pre: queue != null && element != null
+    // Post: n' = n + 1 &&
+    //       a'[n'] = element &&
+    //       Inv(n)
     public static void enqueue(Object element) {
         Objects.requireNonNull(element);
         ensureCapacity();
@@ -21,8 +26,36 @@ public class ArrayQueueModule {
         size++;
     }
 
+    // Pre: queue != null && n > 0
+    // Post: R = a[n] && n' = n && Inv(n)
     public static Object element() {
         return elements[head];
+    }
+
+    // Pre: queue != null
+    // Post: R = n && n' = n && Inv(n)
+    public static int size() {
+        return size;
+    }
+
+    // Pre: queue != null && n > 0
+    // Post: R = a[n] && n' = n - 1 && Inv(n')
+    public static Object dequeue() {
+        assert size > 0;
+        Object temp = elements[head];
+        elements[head] = null;
+        head = (head + 1) % elements.length;
+        size--;
+        return temp;
+    }
+
+    // Pre: queue != null
+    // Post: queue - empty queue
+    public static void clear() {
+        elements = new Object[2];
+        head = 0;
+        tail = 0;
+        size = 0;
     }
 
     private static void ensureCapacity() {
@@ -35,25 +68,5 @@ public class ArrayQueueModule {
             head = 0;
             tail = size;
         }
-    }
-
-    public static int size() {
-        return size;
-    }
-
-    public static Object dequeue() {
-        assert size > 0;
-        Object temp = elements[head];
-        elements[head] = null;
-        head = (head + 1) % elements.length;
-        size--;
-        return temp;
-    }
-
-    public static void clear() {
-        elements = new Object[2];
-        head = 0;
-        tail = 0;
-        size = 0;
     }
 }
