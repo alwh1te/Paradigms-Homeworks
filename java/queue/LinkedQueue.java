@@ -1,47 +1,56 @@
 package queue;
 
-import java.util.Objects;
+import java.util.function.Predicate;
 
-public class LinkedQueue {
-    private Node item;
-    private int size;
-    public void enqueue(Object elem) {
-        this.item = new Node(Objects.requireNonNull(elem), item);
-        size++;
+public class LinkedQueue extends AbstractQueue {
+    private Node head;
+    private Node tail;
+
+    @Override
+    protected void enqueueImpl(Object elem) {
+        Node temp = tail;
+        tail = new Node(elem);
+        if (isEmpty()) {
+            head = tail;
+        } else {
+            temp.next = tail;
+        }
     }
 
-    public Object dequeue() {
-        assert size > 0;
-        size--;
-        Object result = item.value;
-        item = item.prev;
-        return result;
+    @Override
+    protected Object dequeueImpl() {
+        Object res  = head.value;
+        head = head.next;
+        return res;
     }
 
-    public Object element() {
-        assert size > 0;
-        return item.value;
+    @Override
+    protected Object elementImpl() {
+        return head.value;
     }
 
-    public int size() {
-        return size;
+    @Override
+    protected void clearImpl() {
+        this.head = null;
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    public void clear() {
-        this.item = null;
-        size = 0;
+    @Override
+    public int countIfImpl(int ans, Predicate<Object> predicate) {
+        Node curr = head;
+        while (curr.value != null) {
+            if (predicate.test(curr.value)) {
+                ans++;
+            }
+            curr = curr.next;
+        }
+        return ans;
     }
 }
 class Node {
-    protected Node prev;
     protected Object value;
+    protected Node next;
 
-    protected Node(Object item, Node prev) {
+    protected Node(Object item) {
         this.value = item;
-        this.prev = prev;
     }
 }

@@ -5,9 +5,9 @@ import java.util.function.Predicate;
 
 public class ArrayQueueADT {
     // Inv: forall i=1..n: a'[i] = a[i]
-    private int size = 0;
-    private int head = 0;
-    private int tail = 0;
+    private int size;
+    private int head;
+    private int tail;
     private Object[] elements = new Object[2];
 
     // Pre: true
@@ -41,7 +41,7 @@ public class ArrayQueueADT {
     }
 
     // Pred: queue != null && predicate != null
-    // Post: R = count of elements that are a target for predicate
+    // Post: R = arr.length = n : 0..n : predicate.test(arr[n]) == True
     public static int countIf(ArrayQueueADT queue, Predicate<Object> predicate) {
         int ans = 0;
         for (int i = 0; i < queue.size; i++) {
@@ -72,7 +72,7 @@ public class ArrayQueueADT {
     }
 
     // Pre: queue != null
-    // Post: queue - empty queue
+    // Post: queue : queue.isEmpty() == True
     public static void clear(ArrayQueueADT queue) {
         queue.elements = new Object[2];
         queue.size = 0;

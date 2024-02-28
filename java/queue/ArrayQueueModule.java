@@ -77,6 +77,7 @@ public class ArrayQueueModule {
             for (int i = 0; i < size; i++) {
                 newArray[i] = elements[(head + i) % elements.length];
             }
+
             elements = newArray;
             head = 0;
             tail = size;
