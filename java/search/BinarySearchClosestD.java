@@ -2,13 +2,13 @@ package search;
 
 public class BinarySearchClosestD {
 
-    // Pred: array is parsable && array.length > 1 && array is sorted down to = P1
+    // Pred: array is parsable && array.length > 1 && array is sorted && array[0] >= array[array.length - 1] = P1
     // Post: result or closest element for result
     public static void main(String[] args) {
 
         // Pred: P1
         int target = Integer.parseInt(args[0]);
-        // Post: target - искомое значение
+        // Post: target` = args[0]
 
         // Pred: P1
         int[] ints = new int[args.length - 1];
@@ -33,7 +33,7 @@ public class BinarySearchClosestD {
         // Post: result or closest element for result
     }
 
-    // Pred: Array is sorted down to && array.length > 0 && left >=0 && right < array.length
+    // Pred: Array is sorted && array[left] >= array[right] && array.length > 0 && left >= 0 && right < array.length
     // left < left` && right` < right
     // Post: result = min i: arr[i] <= x || the closest elem
     public static int binarySearchRecursive(int[] array, int left, int right, int target) {
@@ -98,8 +98,7 @@ public class BinarySearchClosestD {
 
         return checkElement(array, target, left, right);
 
-        // Post: if target in array -> index
-        // else closest to target element
+        // Post: result = array.index(x) or min |x - arr[i]|
     }
 
 

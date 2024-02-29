@@ -8,7 +8,7 @@ public class BinarySearch {
 
         // Pred: P1
         int target = Integer.parseInt(args[0]);
-        // Post: target - искомое значение
+        // Post: target` = args[0]
 
         // Pred: P1
         int[] ints = new int[args.length - 1];
@@ -57,7 +57,7 @@ public class BinarySearch {
         // Post: result = min i: arr[i] <= x || arr.length if no such i
     }
 
-    // Pred: Array is sorted down to && array.length > 0 && left >=0 && right < array.length
+    // Pred: Array is sorted && array[left] >= array[right] && array.length > 0 && left >= 0 && right < array.length
     // left < left` && right` < right
     // Post: result = min i: arr[i] <= x || arr.length if no such i in
     public static int binarySearchIterative(int[] array, int target) {
@@ -85,7 +85,6 @@ public class BinarySearch {
             }
         }
         return result;
-        // if target in array -> min index
-        // else the closest lem
+        // Post: result = min i: arr[i] <= x || arr.length if no such i
     }
 }
