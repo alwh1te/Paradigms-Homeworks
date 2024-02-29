@@ -15,6 +15,11 @@ public interface Queue {
     Object dequeue();
 
     // Pred: size > 0
+    // Post: queue : for i in 0..(n'-1) : queue[i]' != queue[i + 1]'
+    //       The order of elements is preserved
+    void dedup();
+
+    // Pred: size > 0
     // Post: n' = n && Result = arr[0]
     Object element();
 

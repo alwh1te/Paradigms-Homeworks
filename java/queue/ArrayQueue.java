@@ -4,8 +4,8 @@ import java.util.function.Predicate;
 
 public class ArrayQueue extends AbstractQueue {
     private Object[] elements = new Object[2];
-    private int head = 0;
-    private int tail = 0;
+    private int head;
+    private int tail;
 
     @Override
     protected void enqueueImpl(Object element) {
@@ -22,9 +22,8 @@ public class ArrayQueue extends AbstractQueue {
     private void ensureCapacity() {
         if (size == elements.length) {
             Object[] newArray = new Object[elements.length * 2];
-            for (int i = 0; i < size; i++) {
-                newArray[i] = elements[(head + i) % elements.length];
-            }
+            System.arraycopy(elements, head, newArray, 0, elements.length - head);
+            System.arraycopy(elements, 0, newArray, elements.length - head, tail);
             elements = newArray;
             head = 0;
             tail = size;

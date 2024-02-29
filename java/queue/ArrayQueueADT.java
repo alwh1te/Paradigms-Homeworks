@@ -3,6 +3,7 @@ package queue;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+// Model: arr[1]...arr[n]
 public class ArrayQueueADT {
     // Inv: forall i=1..n: a'[i] = a[i]
     private int size;
@@ -83,9 +84,8 @@ public class ArrayQueueADT {
     private static void ensureCapacity(ArrayQueueADT queue) {
         if (queue.size == queue.elements.length) {
             Object[] newArray = new Object[queue.elements.length * 2];
-            for (int i = 0; i < queue.size; i++) {
-                newArray[i] = queue.elements[(queue.head + i) % queue.elements.length];
-            }
+            System.arraycopy(queue.elements, queue.head, newArray, 0, queue.elements.length - queue.head);
+            System.arraycopy(queue.elements, 0, newArray, queue.elements.length - queue.head, queue.tail);
             queue.elements = newArray;
             queue.head = 0;
             queue.tail = queue.size;

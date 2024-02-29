@@ -4,15 +4,18 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 // Model: arr[1]...arr[n]
-public class ArrayQueueModule {
-    private static Object[] elements = new Object[2];
-    private static int head = 0;
-    private static int tail = 0;
-    private static int size = 0;
+public class ArrayQueue {
+
+    // Inv: forall i=1..n: a'[i] = a[i]
+
+    private Object[] elements = new Object[2];
+    private int head;
+    private int tail;
+    private int size;
 
     // Pre: True
     // Post: R = (n = 0) && n' = n && Inv(n)
-    public static boolean isEmpty() {
+    public boolean isEmpty() {
         return size == 0;
     }
 
@@ -20,9 +23,9 @@ public class ArrayQueueModule {
     // Post: n' = n + 1 &&
     //       a'[n'] = element &&
     //       Inv(n)
-    public static void enqueue(Object element) {
+    public void enqueue(Object element) {
         Objects.requireNonNull(element);
-        ensureCapacity();
+        this.ensureCapacity();
         elements[tail] = element;
         tail = (tail + 1) % elements.length;
         size++;
@@ -30,19 +33,30 @@ public class ArrayQueueModule {
 
     // Pre: n > 0
     // Post: R = a[n] && n' = n && Inv(n)
-    public static Object element() {
+    public Object element() {
         return elements[head];
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            Object[] newArray = new Object[elements.length * 2];
+            System.arraycopy(elements, head, newArray, 0, elements.length - head);
+            System.arraycopy(elements, 0, newArray, elements.length - head, tail);
+            elements = newArray;
+            head = 0;
+            tail = size;
+        }
     }
 
     // Pre: True
     // Post: R = n && n' = n && Inv(n)
-    public static int size() {
+    public int size() {
         return size;
     }
 
     // Pred: predicate != null
-    // Post: Result = arr.length = i = 0..n : predicate.test(arr[i]) == True
-    public static int countIf(Predicate<Object> predicate) {
+    // Post: R = count of elements that are a target for predicate
+    public int countIf(Predicate<Object> predicate) {
         int ans = 0;
         for (int i = 0; i < size; i++) {
             if (predicate.test(elements[(head + i) % elements.length])) {
@@ -54,7 +68,7 @@ public class ArrayQueueModule {
 
     // Pre: n > 0
     // Post: R = a[n] && n' = n - 1 && Inv(n')
-    public static Object dequeue() {
+    public Object dequeue() {
         assert size > 0;
         Object temp = elements[head];
         elements[head] = null;
@@ -65,21 +79,10 @@ public class ArrayQueueModule {
 
     // Pre: True
     // Post: queue.isEmpty == True
-    public static void clear() {
+    public void clear() {
         elements = new Object[2];
         head = 0;
         tail = 0;
         size = 0;
-    }
-
-    private static void ensureCapacity() {
-        if (size == elements.length) {
-            Object[] newArray = new Object[elements.length * 2];
-            System.arraycopy(elements, head, newArray, 0, elements.length - head);
-            System.arraycopy(elements, 0, newArray, elements.length - head, tail);
-            elements = newArray;
-            head = 0;
-            tail = size;
-        }
     }
 }
