@@ -49,7 +49,8 @@ public class ArrayQueue extends AbstractQueue {
     }
 
     @Override
-    protected void clearImpl() {
+    public void clear() {
+        size = 0;
         elements = new Object[2];
         head = 0;
         tail = 0;

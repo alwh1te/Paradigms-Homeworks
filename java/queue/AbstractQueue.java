@@ -54,10 +54,8 @@ public abstract class AbstractQueue implements Queue {
 
     public void clear() {
         size = 0;
-        this.clearImpl();
     }
 
-    protected abstract void clearImpl();
 
     public int countIf(Predicate<Object> predicate) {
         int ans = 0;

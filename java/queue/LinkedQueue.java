@@ -30,7 +30,8 @@ public class LinkedQueue extends AbstractQueue {
     }
 
     @Override
-    protected void clearImpl() {
+    public void clear() {
+        size = 0;
         this.head = null;
     }
 
