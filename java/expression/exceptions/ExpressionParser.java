@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ExpressionParser implements TripleParser, ListParser {
     @Override
-    public TripleExpression parse(String expression) throws ParsingException {
+    public Operation parse(String expression) throws ParsingException {
         return new BaseParser().parse(expression, true);
     }
 
