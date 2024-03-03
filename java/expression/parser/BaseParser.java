@@ -40,7 +40,7 @@ public class BaseParser<T> extends BaseMethods {
                 }
                 stack.pop();
             } else if (isNumber(expression, pos, curChar, lastElement)) {
-                result.push(new Const<T>(type.parseConst(parseValue(false))));
+                result.push(new Const<>(type.parseConst(parseValue(false))));
                 lastElement = Types.VALUE;
             } else if (isUnaryMinus(curChar, lastElement)) {
                 stack.push(new Operators(OperatorsEnum.NEGATE, pos));
@@ -141,15 +141,17 @@ public class BaseParser<T> extends BaseMethods {
                 || expression.charAt(pos + 1) == '(')) {
             throw new IllegalOperationException("Illegal operation: " + op + expression.charAt(pos + 1));
         }
-        return switch (op.toString()) {
-            case "+" -> new Operators(OperatorsEnum.PLUS, pos);
-            case "-" -> new Operators(OperatorsEnum.MINUS, pos);
-            case "*" -> new Operators(OperatorsEnum.MULTI, pos);
-            case "/" -> new Operators(OperatorsEnum.DIV, pos);
-            case "l0" -> new Operators(OperatorsEnum.L_ZEROES, pos);
-            case "t0" -> new Operators(OperatorsEnum.T_ZEROES, pos);
+        return new Operators(switch (op.toString()) {
+            case "+" -> OperatorsEnum.PLUS;
+            case "-" -> OperatorsEnum.MINUS;
+            case "*" -> OperatorsEnum.MULTI;
+            case "/" -> OperatorsEnum.DIV;
+            case "min" -> OperatorsEnum.MIN;
+            case "max" -> OperatorsEnum.MAX;
+            case "l0" -> OperatorsEnum.L_ZEROES;
+            case "t0" -> OperatorsEnum.T_ZEROES;
             default -> throw new IllegalElementException("Unexpected value: " + op);
-        };
+        }, pos);
     }
     private void initial(final String expression, final GenericOperation<T> type) {
         this.expression = expression;
