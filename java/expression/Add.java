@@ -3,7 +3,7 @@ package expression;
 import expression.generic.GenericOperation;
 
 
-public class Add<T> extends AbstractOperation<T> {
+public class Add<T> extends AbstractBinaryOperation<T> {
 
     public Add(Operation<T> a, Operation<T> b, GenericOperation<T> type) {
         super(a, b, type);

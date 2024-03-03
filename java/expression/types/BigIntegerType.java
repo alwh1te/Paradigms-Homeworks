@@ -31,6 +31,16 @@ public class BigIntegerType implements GenericOperation<BigInteger> {
     }
 
     @Override
+    public BigInteger min(BigInteger a, BigInteger b) {
+        return a.min(b);
+    }
+
+    @Override
+    public BigInteger max(BigInteger a, BigInteger b) {
+        return a.max(b);
+    }
+
+    @Override
     public BigInteger parseConst(String s) {
         return new BigInteger(s);
     }

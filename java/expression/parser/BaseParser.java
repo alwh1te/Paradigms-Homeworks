@@ -47,7 +47,8 @@ public class BaseParser<T> extends BaseMethods {
                 lastElement = Types.UNARY_OPERATOR;
             } else if (isBinaryOperator(curChar)) {
                 Operators op = parseOperator(getChars(curChar));
-                while (!stack.isEmpty() && op.getType().getPriority() <= stack.peek().getType().getPriority()) {
+                while (!stack.isEmpty()
+                        && op.getType().getPriority() <= stack.peek().getType().getPriority()) {
                     solve();
                 }
                 stack.push(op);
@@ -82,6 +83,8 @@ public class BaseParser<T> extends BaseMethods {
                 case MINUS -> new Subtract<>(b, a, type);
                 case MULTI -> new Multiply<>(b, a, type);
                 case DIV -> new Divide<>(b, a, type);
+                case MIN -> new Min<>(b, a, type);
+                case MAX -> new Max<>(b, a, type);
                 default -> throw new IllegalOperationException("Unexpected value: " + op + " at position: " + op.getPos());
             });
         } else if (isUnaryOperator(op.getType()) && !result.isEmpty()) {
@@ -141,17 +144,17 @@ public class BaseParser<T> extends BaseMethods {
                 || expression.charAt(pos + 1) == '(')) {
             throw new IllegalOperationException("Illegal operation: " + op + expression.charAt(pos + 1));
         }
-        return new Operators(switch (op.toString()) {
-            case "+" -> OperatorsEnum.PLUS;
-            case "-" -> OperatorsEnum.MINUS;
-            case "*" -> OperatorsEnum.MULTI;
-            case "/" -> OperatorsEnum.DIV;
-            case "min" -> OperatorsEnum.MIN;
-            case "max" -> OperatorsEnum.MAX;
-            case "l0" -> OperatorsEnum.L_ZEROES;
-            case "t0" -> OperatorsEnum.T_ZEROES;
+        return switch (op.toString()) {
+            case "+" -> new Operators(OperatorsEnum.PLUS, pos);
+            case "-" -> new Operators(OperatorsEnum.MINUS, pos);
+            case "*" -> new Operators(OperatorsEnum.MULTI, pos);
+            case "/" -> new Operators(OperatorsEnum.DIV, pos);
+            case "min" -> new Operators(OperatorsEnum.MIN, pos);
+            case "max" -> new Operators(OperatorsEnum.MAX, pos);
+            case "l0" -> new Operators(OperatorsEnum.L_ZEROES, pos);
+            case "t0" -> new Operators(OperatorsEnum.T_ZEROES, pos);
             default -> throw new IllegalElementException("Unexpected value: " + op);
-        }, pos);
+        };
     }
     private void initial(final String expression, final GenericOperation<T> type) {
         this.expression = expression;

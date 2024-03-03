@@ -15,7 +15,8 @@ public abstract class BaseMethods {
     protected boolean isBinaryOperator(final OperatorsEnum c) {
         return c == OperatorsEnum.PLUS || c == OperatorsEnum.MINUS
                 || c == OperatorsEnum.DIV || c == OperatorsEnum.MULTI
-                || c == OperatorsEnum.AND || c == OperatorsEnum.OR || c == OperatorsEnum.XOR;
+                || c == OperatorsEnum.AND || c == OperatorsEnum.OR || c == OperatorsEnum.XOR
+                || c == OperatorsEnum.MIN || c == OperatorsEnum.MAX;
     }
 
     protected boolean isUnaryOperator(final char c) {
@@ -42,6 +43,7 @@ public abstract class BaseMethods {
             case '-' -> List.of('-');
             case '*' -> List.of('*');
             case '/' -> List.of('/');
+            case 'm' -> List.of('m', 'i', 'n', 'a', 'x');
             case 'l', 't' -> List.of('l', 't', '0');
             default -> throw new IllegalStateException("Unexpected value: " + c);
         };
