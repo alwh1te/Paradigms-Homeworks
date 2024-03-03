@@ -47,7 +47,8 @@ public class BaseParser<T> extends BaseMethods {
                 lastElement = Types.UNARY_OPERATOR;
             } else if (isBinaryOperator(curChar)) {
                 Operators op = parseOperator(getChars(curChar));
-                while (!stack.isEmpty() && op.getType().getPriority() <= stack.peek().getType().getPriority()) {
+                while (!stack.isEmpty()
+                        && op.getType().getPriority() <= stack.peek().getType().getPriority()) {
                     solve();
                 }
                 stack.push(op);
@@ -82,6 +83,8 @@ public class BaseParser<T> extends BaseMethods {
                 case MINUS -> new Subtract<>(b, a, type);
                 case MULTI -> new Multiply<>(b, a, type);
                 case DIV -> new Divide<>(b, a, type);
+                case MIN -> new Min<>(b, a, type);
+                case MAX -> new Max<>(b, a, type);
                 default -> throw new IllegalOperationException("Unexpected value: " + op + " at position: " + op.getPos());
             });
         } else if (isUnaryOperator(op.getType()) && !result.isEmpty()) {
