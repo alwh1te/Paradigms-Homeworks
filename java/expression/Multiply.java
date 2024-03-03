@@ -1,11 +1,11 @@
 package expression;
 
-import java.util.List;
+import expression.generic.GenericOperation;
 
-public class Multiply extends AbstractOperation {
+public class Multiply<T> extends AbstractOperation<T> {
 
-    public Multiply(Operation a, Operation b) {
-        super(a, b);
+    public Multiply(Operation<T> a, Operation<T> b, GenericOperation<T> type) {
+        super(a, b, type);
     }
 
     @Override
@@ -14,12 +14,8 @@ public class Multiply extends AbstractOperation {
     }
 
     @Override
-    protected int solve(int a, int b) {
-        return a * b;
+    protected T solve(T a, T b) {
+        return type.multiply(a, b);
     }
 
-    @Override
-    public int evaluate(List<Integer> variables) {
-        return 0;
-    }
 }

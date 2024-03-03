@@ -1,61 +1,45 @@
 package expression;
 
-import java.util.List;
 import java.util.Objects;
 
-public class Variable implements Operation {
+public class Variable<T> implements Operation<T> {
 
-    private String var;
-    private int index;
+    private final String var;
 
     public Variable(String var) {
         this.var = var;
     }
 
-    public Variable(int index) {
-        this.index = index;
-    }
-
-    public Variable(String name, int index) {
-        this.var = name;
-        this.index = index;
-    }
-
 
     @Override
-    public int evaluate(int x) {
-        return x;
-    }
-
-    public String toString() {
-        return String.valueOf(var);
-    }
-
-    @Override
-    public int evaluate(int a, int b, int c) {
+    public T evaluate(T x, T y, T z) {
         return switch (var) {
-            case "x" -> a;
-            case "y" -> b;
-            case "z" -> c;
+            case "x" -> x;
+            case "y" -> y;
+            case "z" -> z;
             default -> throw new IllegalStateException("Unexpected value: " + var);
         };
     }
+    @Override
+    public T evaluate(T x) {
+        return x;
+    }
 
     @Override
-    public int evaluate(List<Integer> variables) {
-        return variables.get(index);
+    public String toString() {
+        return var;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Variable variable = (Variable) o;
+        Variable<?> variable = (Variable<?>) o;
         return Objects.equals(var, variable.var);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(var) * 71;
+        return Objects.hash(var) + 7;
     }
 }

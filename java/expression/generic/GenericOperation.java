@@ -1,10 +1,10 @@
 package expression.generic;
 
-import expression.Operation;
-
 public interface GenericOperation<T> {
-    Operation add(T a, T b);
-    Operation subtract(T a, T b);
-    Operation multiply(T a, T b);
-    Operation divide(T a, T b);
+    T add(T a, T b);
+    T subtract(T a, T b);
+    T multiply(T a, T b);
+    T divide(T a, T b);
+    T negate(T a);
+    T parseConst(String s);
 }

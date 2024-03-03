@@ -1,47 +1,40 @@
 package expression;
 
-import java.util.List;
 import java.util.Objects;
 
-public class Const implements Operation {
+public class Const<T> implements Operation<T> {
 
-    private final int value;
+    private final T value;
 
-    public Const(int value) {
+    public Const(T value) {
         this.value = value;
     }
 
+    @Override
+    public T evaluate(T x, T y, T z) {
+        return value;
+    }
 
     @Override
-    public int evaluate(int x) {
+    public T evaluate(T x) {
         return value;
     }
 
     @Override
     public String toString() {
-        return Integer.toString(value);
-    }
-
-    @Override
-    public int evaluate(int a, int b, int c) {
-        return value;
-    }
-
-    @Override
-    public int evaluate(List<Integer> variables) {
-        return value;
+        return value.toString();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Const aConst = (Const) o;
-        return value == aConst.value;
+        Const<?> aConst = (Const<?>) o;
+        return Objects.equals(value, aConst.value);
     }
 
     @Override
     public int hashCode() {
-        return (Objects.hash(value) + 34) * 17;
+        return Objects.hash(value) + 13;
     }
 }

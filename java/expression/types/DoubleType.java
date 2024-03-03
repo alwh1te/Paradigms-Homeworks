@@ -1,26 +1,35 @@
 package expression.types;
 
 import expression.generic.GenericOperation;
-import expression.Operation;
-
 public class DoubleType implements GenericOperation<Double> {
+
     @Override
-    public Operation add(Double a, Double b) {
-        return null;
+    public Double add(Double a, Double b) {
+        return a + b;
     }
 
     @Override
-    public Operation subtract(Double a, Double b) {
-        return null;
+    public Double subtract(Double a, Double b) {
+        return a - b;
     }
 
     @Override
-    public Operation multiply(Double a, Double b) {
-        return null;
+    public Double multiply(Double a, Double b) {
+        return a * b;
     }
 
     @Override
-    public Operation divide(Double a, Double b) {
-        return null;
+    public Double divide(Double a, Double b) {
+        return a / b;
+    }
+
+    @Override
+    public Double negate(Double a) {
+        return -a;
+    }
+
+    @Override
+    public Double parseConst(String s) {
+        return Double.parseDouble(s);
     }
 }

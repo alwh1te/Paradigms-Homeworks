@@ -1,26 +1,56 @@
 package expression.types;
 
-import expression.*;
+import expression.exceptions.*;
 import expression.generic.GenericOperation;
 
 public class IntegerType implements GenericOperation<Integer> {
     @Override
-    public Operation add(Integer a, Integer b) {
-        return new CheckedAdd(new Const(b), new Const(b));
+    public Integer add(Integer a, Integer b) {
+        if ((a > 0 && b > 0 && a > Integer.MAX_VALUE - b)
+                || (a < 0 && b < 0 && a < Integer.MIN_VALUE - b)) {
+            throw new AddOverflowException("can't add: " + a + " + " + b);
+        }
+        return a + b;
     }
 
     @Override
-    public Operation subtract(Integer a, Integer b) {
-        return new CheckedSubtract(new Const(b), new Const(b));
+    public Integer subtract(Integer a, Integer b) {
+        if ((a >= 0 && b < 0 && a > Integer.MAX_VALUE + b)
+                || (a < 0 && b > 0 && a < Integer.MIN_VALUE + b)) {
+            throw new SubtractOverflowException("can't subtract: " + a + " - " + b);
+        }
+        return a - b;
     }
 
     @Override
-    public Operation multiply(Integer a, Integer b) {
-        return new CheckedMultiply(new Const(b), new Const(b));
+    public Integer multiply(Integer a, Integer b) {
+        if (a != 0 && b != 0 && (a > 0 && b > 0 && a > Integer.MAX_VALUE / b
+                || a < 0 && b < 0 && a < Integer.MAX_VALUE / b
+                || a > 0 && b < 0 &&
+                b < Integer.MIN_VALUE / a || a < 0 && b > 0 && a < Integer.MIN_VALUE / b)) {
+            throw new MultiplyOverflowException("can't multiply: " + a + " * " + b);
+        }
+        return a * b;
     }
 
     @Override
-    public Operation divide(Integer a, Integer b) {
-        return new CheckedDivide(new Const(b), new Const(b));
+    public Integer divide(Integer a, Integer b) {
+        if (b == 0 || (a == Integer.MIN_VALUE && b == -1)) {
+            throw new DivisionByZeroException("can't divide: " + a + " / " + b);
+        }
+        return a / b;
+    }
+
+    @Override
+    public Integer negate(Integer a) {
+        if (a == Integer.MIN_VALUE) {
+            throw new NegateOverflowException("can't negate " + a);
+        }
+        return -a;
+    }
+
+    @Override
+    public Integer parseConst(String s) {
+        return Integer.parseInt(s);
     }
 }

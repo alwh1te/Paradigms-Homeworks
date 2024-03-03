@@ -1,4 +1,8 @@
 package expression.generic;
 
-public class GenericParser {
+import expression.Operation;
+import expression.parser.BaseParser;
+
+public class GenericParser<T> {
+
 }
