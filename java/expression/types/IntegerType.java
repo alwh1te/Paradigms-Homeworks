@@ -50,6 +50,16 @@ public class IntegerType implements GenericOperation<Integer> {
     }
 
     @Override
+    public Integer min(Integer a, Integer b) {
+        return a < b ? a : b;
+    }
+
+    @Override
+    public Integer max(Integer a, Integer b) {
+        return a > b ? a : b;
+    }
+
+    @Override
     public Integer parseConst(String s) {
         return Integer.parseInt(s);
     }

@@ -40,14 +40,15 @@ public class BaseParser<T> extends BaseMethods {
                 }
                 stack.pop();
             } else if (isNumber(expression, pos, curChar, lastElement)) {
-                result.push(new Const<T>(type.parseConst(parseValue(false))));
+                result.push(new Const<>(type.parseConst(parseValue(false))));
                 lastElement = Types.VALUE;
             } else if (isUnaryMinus(curChar, lastElement)) {
                 stack.push(new Operators(OperatorsEnum.NEGATE, pos));
                 lastElement = Types.UNARY_OPERATOR;
             } else if (isBinaryOperator(curChar)) {
                 Operators op = parseOperator(getChars(curChar));
-                while (!stack.isEmpty() && op.getType().getPriority() <= stack.peek().getType().getPriority()) {
+                while (!stack.isEmpty()
+                        && op.getType().getPriority() <= stack.peek().getType().getPriority()) {
                     solve();
                 }
                 stack.push(op);
@@ -82,6 +83,8 @@ public class BaseParser<T> extends BaseMethods {
                 case MINUS -> new Subtract<>(b, a, type);
                 case MULTI -> new Multiply<>(b, a, type);
                 case DIV -> new Divide<>(b, a, type);
+                case MIN -> new Min<>(b, a, type);
+                case MAX -> new Max<>(b, a, type);
                 default -> throw new IllegalOperationException("Unexpected value: " + op + " at position: " + op.getPos());
             });
         } else if (isUnaryOperator(op.getType()) && !result.isEmpty()) {
@@ -146,6 +149,8 @@ public class BaseParser<T> extends BaseMethods {
             case "-" -> new Operators(OperatorsEnum.MINUS, pos);
             case "*" -> new Operators(OperatorsEnum.MULTI, pos);
             case "/" -> new Operators(OperatorsEnum.DIV, pos);
+            case "min" -> new Operators(OperatorsEnum.MIN, pos);
+            case "max" -> new Operators(OperatorsEnum.MAX, pos);
             case "l0" -> new Operators(OperatorsEnum.L_ZEROES, pos);
             case "t0" -> new Operators(OperatorsEnum.T_ZEROES, pos);
             default -> throw new IllegalElementException("Unexpected value: " + op);

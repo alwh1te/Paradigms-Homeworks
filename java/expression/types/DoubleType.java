@@ -29,6 +29,16 @@ public class DoubleType implements GenericOperation<Double> {
     }
 
     @Override
+    public Double min(Double a, Double b) {
+        return a < b ? a : b;
+    }
+
+    @Override
+    public Double max(Double a, Double b) {
+        return a > b ? a : b;
+    }
+
+    @Override
     public Double parseConst(String s) {
         return Double.parseDouble(s);
     }

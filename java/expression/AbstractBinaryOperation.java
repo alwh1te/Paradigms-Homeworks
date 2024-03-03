@@ -2,15 +2,12 @@ package expression;
 
 import expression.generic.GenericOperation;
 
-import java.util.List;
-import java.util.Objects;
-
-public abstract class AbstractOperation<T> implements Operation<T> {
+public abstract class AbstractBinaryOperation<T> implements Operation<T> {
     private final Operation<T> a;
     private final Operation<T> b;
     protected final GenericOperation<T> type;
 
-    public AbstractOperation(Operation<T> a, Operation<T> b, GenericOperation<T> type) {
+    public AbstractBinaryOperation(Operation<T> a, Operation<T> b, GenericOperation<T> type) {
         this.a = a;
         this.b = b;
         this.type = type;
