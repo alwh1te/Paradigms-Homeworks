@@ -1,40 +1,22 @@
 package expression;
 
-import java.util.Objects;
-
-public class Const<T> implements Operation<T> {
-
-    private final T value;
-
+public class Const<T> extends AbstractOperationElement<T>{
     public Const(T value) {
-        this.value = value;
+        super(value);
     }
 
     @Override
-    public T evaluate(T x, T y, T z) {
+    protected T evaluateImpl(T x, T y, T z) {
         return value;
     }
 
     @Override
-    public T evaluate(T x) {
+    protected T evaluateImpl(T x) {
         return value;
     }
 
     @Override
     public String toString() {
         return value.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Const<?> aConst = (Const<?>) o;
-        return Objects.equals(value, aConst.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value) + 13;
     }
 }

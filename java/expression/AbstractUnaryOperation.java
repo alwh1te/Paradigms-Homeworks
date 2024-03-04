@@ -12,10 +12,10 @@ public abstract class AbstractUnaryOperation<T> implements Operation<T> {
         this.type = type;
     }
 
+    protected abstract String getOperator();
+
     @Override
     public String toString() {
         return getOperator() + value + ")";
     }
-
-    protected abstract String getOperator();
 }

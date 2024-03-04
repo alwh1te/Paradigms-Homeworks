@@ -58,7 +58,7 @@ public class BaseParser<T> extends BaseMethods {
                 lastElement = Types.UNARY_OPERATOR;
             } else {
                 String var = parseValue(true);
-                result.push(new Variable<>(var));
+                result.push((Operation<T>) new Variable<>(var));
             }
         }
         while(!stack.isEmpty()) {
