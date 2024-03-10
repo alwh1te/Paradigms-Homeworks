@@ -3,7 +3,7 @@ package queue;
 import java.util.function.Predicate;
 
 // Model: arr[1]...arr[n]
-// Inv: for i = 1..n : arr[i] != null
+// Inv: forall i=1..n: a'[i] = a[i] != null
 public interface Queue {
 
     // Pred: element != null
@@ -16,7 +16,7 @@ public interface Queue {
 
     // Pred: size > 0
     // Post: queue : for i in 0..(n'-1) : queue[i]' != queue[i + 1]'
-    //       The order of elements is preserved
+    //       arr'[i]
     void dedup();
 
     // Pred: size > 0
@@ -31,11 +31,11 @@ public interface Queue {
     // Post: Result = n
     int size();
 
-    // Pred: predicate != null
-    // Post: Result = arr.length = i = 0..n : predicate.test(arr[i]) == True
+    // Pred: predicate != null && queue.size > 0
+    // Post: Result = arr.length = i = 0..n : predicate.test(arr[i]) == True && forall a[i] = a[i']
     int countIf(Predicate<Object> predicate);
 
     // Pred: True
-    // Post: n' == 0 && for i=0..n: arr'[i] = null
+    // Post: this.isEmpty() == True
     void clear();
 }

@@ -12,7 +12,10 @@ public class GenericTabulator implements Tabulator {
     private final static Map<String, GenericOperation<?>> modes = Map.of(
             "i", new IntegerType(),
             "d", new DoubleType(),
-            "bi", new BigIntegerType()
+            "bi", new BigIntegerType(),
+            "u", new IntegerUnCheked(),
+            "b", new ByteUnChecked(),
+            "bool", new BooleanType()
     );
     @Override
     public Object[][][] tabulate(String mode, String expression, int x1, int x2, int y1, int y2, int z1, int z2) throws Exception {
@@ -28,7 +31,7 @@ public class GenericTabulator implements Tabulator {
         int ySize = Math.abs(y2-y1);
         int zSize = Math.abs(z2-z1);
         Object[][][] res = new Object[xSize + 1][ySize + 1][zSize + 1];
-        Operation<T> expr = new BaseParser().parse(expression, type);
+        Operation<T> expr = new BaseParser<T>().parse(expression, type);
         for (int i = 0; i <= xSize; i++) {
             for (int j = 0; j <= ySize; j++) {
                 for (int k = 0; k <= zSize; k++) {

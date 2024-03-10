@@ -20,20 +20,22 @@ public abstract class AbstractQueue implements Queue {
     }
 
     public void dedup() {
-        Queue newQueue = new LinkedQueue();
-        while (!isEmpty()) {
-            Object temp = this.dequeue();
-            while (!isEmpty() && temp.equals(this.element())) {
-                this.dequeue();
-            }
-            newQueue.enqueue(temp);
+        if (isEmpty()) {
+            return;
         }
-        while (!newQueue.isEmpty()) {
-            this.enqueue(newQueue.dequeue());
+        Object curr = this.dequeue();
+        this.enqueue(curr);
+        int tempSize = size;
+        int i = 1;
+        while (i < tempSize) {
+            Object next = this.dequeue();
+            if (!curr.equals(next)) {
+                curr = next;
+                this.enqueue(curr);
+            }
+            i++;
         }
     }
-
-
 
     protected abstract Object dequeueImpl();
 
