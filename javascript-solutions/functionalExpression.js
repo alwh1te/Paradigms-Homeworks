@@ -1,39 +1,10 @@
 "use strict"
-
-let subtract = function () {
-    let result = 0;
-    for (const i of arguments) {
-        result -= i;
-    }
-    return result;
-}
-
-let cnst = function () {
-    return arguments[0];
-}
-let variable = function () {
-    return arguments[0];
-}
-let multiply = function () {
-    let result = 1;
-    for (const i of arguments) {
-        result *= i;
-    }
-    return result;
-}
-
-let add = function () {
-    let result = 0;
-    for (const i of arguments) {
-        result += i;
-    }
-    return result;
-}
-
-let divide = function () {
-    let result = 0;
-    for (const i of arguments) {
-        result /= i;
-    }
-    return result;
-}
+const operation = operation => (...ops) => (...operands) => operation(...ops.map(op => op(...operands)))
+const cnst = x => () => Number(x);
+const variable = name => (...args) => args[(varInd.indexOf(name))]
+const add = operation((a, b) => a + b)
+const subtract = operation((a, b) => a - b)
+const multiply = operation((a, b) => a * b)
+const divide = operation((a, b) => a / b)
+const negate = operation(a => -a)
+const varInd = ['x', 'y', 'z']
