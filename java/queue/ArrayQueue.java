@@ -52,7 +52,6 @@ public class ArrayQueue extends AbstractQueue {
     @Override
     public void clear() {
         Arrays.fill(elements, Math.min(tail, head), Math.max(tail, head), null);
-
         size = 0;
         head = 0;
         tail = 0;

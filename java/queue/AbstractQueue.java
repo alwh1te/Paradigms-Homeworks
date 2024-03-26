@@ -58,7 +58,6 @@ public abstract class AbstractQueue implements Queue {
         size = 0;
     }
 
-
     public int countIf(Predicate<Object> predicate) {
         int ans = 0;
         return countIfImpl(ans, predicate);

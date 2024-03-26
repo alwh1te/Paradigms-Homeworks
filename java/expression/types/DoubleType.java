@@ -42,4 +42,9 @@ public class DoubleType implements GenericOperation<Double> {
     public Double parseConst(String s) {
         return Double.parseDouble(s);
     }
+
+    @Override
+    public Double count(Double a) {
+        return Double.NaN;
+    }
 }

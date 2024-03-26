@@ -44,4 +44,9 @@ public class BigIntegerType implements GenericOperation<BigInteger> {
     public BigInteger parseConst(String s) {
         return new BigInteger(s);
     }
+
+    @Override
+    public BigInteger count(BigInteger a) {
+        return null;
+    }
 }

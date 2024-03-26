@@ -42,4 +42,9 @@ public class ByteUnChecked implements GenericOperation<Byte> {
     public Byte parseConst(String s) {
         return (byte) Integer.parseInt(s);
     }
+
+    @Override
+    public Byte count(Byte a) {
+        return null;
+    }
 }

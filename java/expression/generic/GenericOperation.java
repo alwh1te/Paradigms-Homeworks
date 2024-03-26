@@ -9,4 +9,5 @@ public interface GenericOperation<T> {
     T min(T a, T b);
     T max(T a, T b);
     T parseConst(String s);
+    T count(T a);
 }

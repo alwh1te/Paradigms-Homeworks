@@ -42,4 +42,9 @@ public class IntegerUnCheked implements GenericOperation<Integer> {
     public Integer parseConst(String s) {
         return Integer.parseInt(s);
     }
+
+    @Override
+    public Integer count(Integer a) {
+        return null;
+    }
 }
