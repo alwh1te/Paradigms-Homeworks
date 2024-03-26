@@ -24,7 +24,9 @@ const operator = {
     '-' : [(...args) => new Subtract(...args), 2],
     '*' : [(...args) => new Multiply(...args), 2],
     '/' : [(...args) => new Divide(...args), 2],
-    'negate' : [(...args) => new Negate(...args), 1]
+    'negate' : [(...args) => new Negate(...args), 1],
+    'sin' : [(...args) => new Sin(...args), 1],
+    'cos' : [(...args) => new Cos(...args), 1]
 }
 
 
@@ -45,7 +47,9 @@ const Subtract = ExpressionConstructor((a, b) => a - b, "-");
 const Multiply = ExpressionConstructor((a, b) => a * b, "*");
 const Divide = ExpressionConstructor((a, b) => a / b, "/");
 const Negate = ExpressionConstructor((a) => -a, "negate");
-const Sqrt = ExpressionConstructor(v => Math.sqrt(v), "sqrt");
+
+const Sin = ExpressionConstructor((a) => Math.sin(a), "sin")
+const Cos = ExpressionConstructor((a) => Math.cos(a), "cos")
 
 const isVar = (a) => a === 'x' || a === 'y' || a === 'z'
 const isNumber = (a) => Number(a) !== undefined
