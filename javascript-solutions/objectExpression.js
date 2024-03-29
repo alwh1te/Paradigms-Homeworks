@@ -8,7 +8,7 @@ const Operation = function () {
 
 function Const(value) {
     this.value = parseInt(value);
-    this.evaluate = (...args) => this.value;
+    this.evaluate = () => this.value;
     this.toString = () => this.value.toString();
     this.prefix = () => this.toString()
     this.postfix = () => this.toString()
@@ -32,12 +32,16 @@ const operator = {
     '/': [(...args) => new Divide(...args), 2],
     'negate': [(...args) => new Negate(...args), 1],
     'sin': [(...args) => new Sin(...args), 1],
-    'cos': [(...args) => new Cos(...args), 1]
+    'cos': [(...args) => new Cos(...args), 1],
+    'mean': [(...args) => new Mean(...args), -1],
+    'var': [(...args) => new Var(...args), -1]
 }
 
 
 const ExpressionConstructor = (solver, operand) => {
+
     const constructor = function (...args) {
+        this.arg = args
         this.args = args;
         Operation.apply(this, ...args);
     }
@@ -57,15 +61,62 @@ const Negate = ExpressionConstructor((a) => -a, "negate");
 const Sin = ExpressionConstructor((a) => Math.sin(a), "sin")
 const Cos = ExpressionConstructor((a) => Math.cos(a), "cos")
 
+const Mean = ExpressionConstructor((...args) => ((args.reduce((sum, a) => sum + a)) / args.length), 'mean')
+const Var = ExpressionConstructor((...args) => MeanMath(...args.map(value => (value - MeanMath(...args)) ** 2)), 'var')
+const MeanMath = (...args) => ((args.reduce((sum, a) => sum + a)) / args.length)
+
 const isVar = (a) => a === 'x' || a === 'y' || a === 'z'
 const isNumber = (a) => !isNaN(Number(a))
 
-function ParseException(place, message) {
+function ParseException(message) {
     this.message = message
-    this.place = place
 }
-ParseException.prototype = Object.create(Error.prototype)
 
+const IncorrectBracketsSequence = () => new ParseException('incorrect brackets sequence')
+const NotEnoughArguments = () => new ParseException('not enough arguments')
+const NotEnoughOperators = () => new ParseException('not enough operators')
+
+function parsePrefix(expression) {
+    expression = expression.replaceAll('(', ' ( ')
+    expression = expression.replaceAll(')', ' ) ')
+    let tokens = expression.split(' ').filter(s => s)
+    let bracketsBalance = 0
+
+    let parseToken = function () {
+        let token = tokens.shift()
+        if (token === '(') {
+            token = tokens.shift()
+            bracketsBalance++
+            const op = operator[token]
+            const items = []
+            token = parseToken()
+            while (token !== ')' && (items.length < op[1] || op[1] < 0)) {
+                items.push(token)
+                token = parseToken()
+            }
+            if (items.length < op[1] && op[1] !== -1) throw new ParseException('malo')
+            return op[0](...items)
+        } else if (isNumber(token)) {
+            return new Const(token)
+        } else if (isVar(token)) {
+            return new Variable(token)
+        } else if (token === ')') {
+            bracketsBalance--
+            return token
+        } else {
+            throw new ParseException('huita')
+        }
+    }
+
+    let ans = parseToken()
+    if (bracketsBalance !== 0) {
+        throw new IncorrectBracketsSequence()
+    }
+    if (tokens.length > 0) {
+        throw new NotEnoughOperators()
+    }
+    return ans
+}
 
 const parse = (expression) => {
     let parsed = expression.split(' ').filter(str => str)
@@ -84,60 +135,3 @@ const parse = (expression) => {
     }
     return stack.pop()
 }
-
-
-
-function parsePrefix(expression) {
-    expression = expression.replaceAll('(', ' ( ')
-    expression = expression.replaceAll(')', ' ) ')
-    let tokens = expression.split(' ').filter(s => s)
-    let brackeBalance = 0
-    let parseToken = function () {
-        if (tokens.length === 0) {
-            throw new ParseException(tokens, 'not enough args')
-        }
-        if (brackeBalance < 0) {
-            throw new ParseException(tokens, 'bracketBalance < 0')
-        }
-        let token = tokens.shift();
-        if (token === '(') {
-            brackeBalance++
-            let operationToken = tokens.shift();
-            let temp = []
-            let lastOp = operator[operationToken]
-            while (temp.length < lastOp[1]) temp.push(parseToken())
-            return lastOp[0](...temp);
-        }
-        else if (token === ')') {
-            brackeBalance--
-            return parseToken()
-        }
-        else if (token in operator) {
-            let temp = []
-            let lastOp = operator[token]
-            while (temp.length < lastOp[1]) temp.push(parseToken())
-            return lastOp[0](...temp);
-        } else if (isNumber(token)) {
-            return new Const(parseFloat(token));
-        } else if (isVar(token)) {
-            return new Variable(token);
-        } else {
-            throw new ParseException(tokens, 'unexpected op')
-        }
-    }
-
-    let ans = parseToken()
-    while (tokens.shift() === ')') brackeBalance--
-    if (brackeBalance !== 0) {
-        throw new ParseException(expression, 'bracketBalance != 0')
-    }
-    if (tokens.length > 0) {
-        throw new ParseException(expression, 'bullshit')
-    }
-    return ans
-}
-
-// console.log(parsePrefix('( / x ( * y z )  )').evaluate(1, 1, 1))
-// console.log(parsePrefix('(/ (* x y) z)').prefix())
-// let expr = parse('10')
-// console.log(expr.prefix())
