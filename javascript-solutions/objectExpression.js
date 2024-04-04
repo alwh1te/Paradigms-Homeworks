@@ -25,7 +25,7 @@ function Variable(name) {
 }
 
 
-const operator = {
+const operations = {
     '+': [(...args) => new Add(...args), 2], // Operation and count of the arguments
     '-': [(...args) => new Subtract(...args), 2],
     '*': [(...args) => new Multiply(...args), 2],
@@ -33,8 +33,8 @@ const operator = {
     'negate': [(...args) => new Negate(...args), 1],
     'sin': [(...args) => new Sin(...args), 1],
     'cos': [(...args) => new Cos(...args), 1],
-    'mean': [(...args) => new Mean(...args), -1],
-    'var': [(...args) => new Var(...args), -1]
+    'mean': [(...args) => new Mean(...args), Number.MAX_VALUE],
+    'var': [(...args) => new Var(...args), Number.MAX_VALUE]
 }
 
 
@@ -69,32 +69,37 @@ const isVar = (a) => a === 'x' || a === 'y' || a === 'z'
 const isNumber = (a) => !isNaN(Number(a))
 
 function ParseException(message) {
-    this.message = message
+    return new Error(message)
 }
-
-const IncorrectBracketsSequence = () => new ParseException('incorrect brackets sequence')
-const NotEnoughArguments = () => new ParseException('not enough arguments')
-const NotEnoughOperators = () => new ParseException('not enough operators')
+const IncorrectBracketsSequenceException = (message) => ParseException('incorrect brackets sequence' + message)
+const NotEnoughArgumentsException = (message) => ParseException('not enough arguments' + message)
+const NotEnoughOperatorsException = (message) => ParseException('not enough operators' + message)
+const IllegalArgumentException = (message) => ParseException('unexpected item' + message)
+const EmptyExpressionException = () => ParseException('empty expression')
 
 function parsePrefix(expression) {
-    expression = expression.replaceAll('(', ' ( ')
-    expression = expression.replaceAll(')', ' ) ')
+    expression = expression.replaceAll('(', ' ( ').replaceAll(')', ' ) ')
     let tokens = expression.split(' ').filter(s => s)
     let bracketsBalance = 0
+    let index = 0
 
     let parseToken = function () {
+        if (tokens.length === 0) throw new EmptyExpressionException()
         let token = tokens.shift()
+        index += token.length
         if (token === '(') {
             token = tokens.shift()
             bracketsBalance++
-            const op = operator[token]
+            const opSign = token;
+            const op = operations[token]
             const items = []
             token = parseToken()
-            while (token !== ')' && (items.length < op[1] || op[1] < 0)) {
+            while (token !== ')' && (items.length < op[1])) {
                 items.push(token)
                 token = parseToken()
             }
-            if (items.length < op[1] && op[1] !== -1) throw new ParseException('malo')
+            if (items.length < op[1] && op[1] !== Number.MAX_VALUE) throw NotEnoughArgumentsException(' for operation: ' + opSign + ' at position: ' + index)
+            index += opSign.length
             return op[0](...items)
         } else if (isNumber(token)) {
             return new Const(token)
@@ -104,16 +109,16 @@ function parsePrefix(expression) {
             bracketsBalance--
             return token
         } else {
-            throw new ParseException('huita')
+            throw IllegalArgumentException(': ' + token + ' at position: ' + index)
         }
     }
 
     let ans = parseToken()
     if (bracketsBalance !== 0) {
-        throw new IncorrectBracketsSequence()
+        throw IncorrectBracketsSequenceException(', balance != 0')
     }
     if (tokens.length > 0) {
-        throw new NotEnoughOperators()
+        throw NotEnoughOperatorsException(' for this arguments: ' + tokens.join(' '))
     }
     return ans
 }
@@ -125,10 +130,10 @@ const parse = (expression) => {
         let elem = parsed[i]
         if (isVar(elem)) {
             stack.push(new Variable(elem))
-        } else if (elem in operator) {
+        } else if (elem in operations) {
             let operands = []
-            while (operands.length < operator[elem][1]) operands.unshift(stack.pop())
-            stack.push(operator[elem][0](...operands))
+            while (operands.length < operations[elem][1]) operands.unshift(stack.pop())
+            stack.push(operations[elem][0](...operands))
         } else if (isNumber(elem)) {
             stack.push(new Const(elem))
         }
