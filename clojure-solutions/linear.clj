@@ -63,5 +63,13 @@
 (defn m*v [m v]
       (m-v-op + m v *))
 
-;(defn m*v [m v]
-;      (mapv #(apply + (map * % v)) m))
+(defn c+ [a b]
+     (mapv m+ a b))
+
+(defn c- [a b]
+      (mapv m- a b))
+(defn c* [a b]
+      (mapv m* a b))
+
+(defn cd [a b]
+      (mapv md a b))
