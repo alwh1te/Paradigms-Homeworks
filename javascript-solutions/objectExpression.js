@@ -39,7 +39,6 @@ const operations = {
 
 
 const ExpressionConstructor = (solver, operand) => {
-
     const constructor = function (...args) {
         this.arg = args
         this.args = args;
