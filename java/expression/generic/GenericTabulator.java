@@ -1,9 +1,8 @@
 package expression.generic;
 
-import expression.Operation;
 import expression.exceptions.*;
-import expression.parser.BaseParser;
-import expression.types.*;
+import expression.generic.parser.BaseParser;
+import expression.generic.types.*;
 
 import java.util.Map;
 

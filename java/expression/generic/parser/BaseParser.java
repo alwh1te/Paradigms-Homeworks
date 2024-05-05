@@ -1,13 +1,16 @@
-package expression.parser;
+package expression.generic.parser;
 
-import expression.*;
+import expression.OperatorsEnum;
 import expression.exceptions.*;
+import expression.generic.*;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
 
-public class BaseParser extends BaseMethods {
+public class BaseParser<T> extends BaseMethods {
 
-    private Deque<Operation> result;
+    private Deque<Operation<T>> result;
     private Deque<Operators> stack;
     private List<String> variables;
     private Types lastElement;
@@ -15,21 +18,14 @@ public class BaseParser extends BaseMethods {
     private char curChar;
     private String expression;
     private int len;
-    private boolean checked;
+    private GenericOperation<T> type;
 
-    public Operation parse(final String expression, final boolean checked) throws ParsingException {
-        this.initial(expression, checked);
+    public Operation<T> parse(final String expression, final GenericOperation<T> type) throws ParsingException {
+        this.initial(expression, type);
         return parse();
     }
 
-    public Operation parse(final String expression, final boolean checked, final List<String> vars) throws ParsingException {
-        this.initial(expression, checked);
-        this.variables = vars;
-        return parse();
-    }
-
-
-    private Operation parse() throws ParsingException {
+    private Operation<T> parse() throws ParsingException {
         for (pos = 0; pos < len; pos++) {
             curChar = expression.charAt(pos);
             if (Character.isWhitespace(curChar)) {
@@ -46,14 +42,15 @@ public class BaseParser extends BaseMethods {
                 }
                 stack.pop();
             } else if (isNumber(expression, pos, curChar, lastElement)) {
-                result.push(new Const(Integer.parseInt(parseValue(false))));
+                result.push(new Const<>(type.parseConst(parseValue(false))));
                 lastElement = Types.VALUE;
             } else if (isUnaryMinus(curChar, lastElement)) {
                 stack.push(new Operators(OperatorsEnum.NEGATE, pos));
                 lastElement = Types.UNARY_OPERATOR;
             } else if (isBinaryOperator(curChar)) {
                 Operators op = parseOperator(getChars(curChar));
-                while (!stack.isEmpty() && op.getType().getPriority() <= stack.peek().getType().getPriority()) {
+                while (!stack.isEmpty()
+                        && op.getType().getPriority() <= stack.peek().getType().getPriority()) {
                     solve();
                 }
                 stack.push(op);
@@ -63,7 +60,7 @@ public class BaseParser extends BaseMethods {
                 lastElement = Types.UNARY_OPERATOR;
             } else {
                 String var = parseValue(true);
-                result.push(new Variable(var, variables.indexOf(var)));
+                result.push((Operation<T>) new Variable<>(var));
             }
         }
         while(!stack.isEmpty()) {
@@ -81,21 +78,21 @@ public class BaseParser extends BaseMethods {
         }
         Operators op = stack.pop();
         if (isBinaryOperator(op.getType()) && result.size() >= 2) {
-            Operation a = result.pop();
-            Operation b = result.pop();
+            Operation<T> a = result.pop();
+            Operation<T> b = result.pop();
             result.push(switch (op.getType()) {
-                case PLUS -> checked ? new CheckedAdd(b, a) : new Add(b, a);
-                case MINUS -> checked ? new CheckedSubtract(b, a) : new Subtract(b, a);
-                case MULTI -> checked ? new CheckedMultiply(b, a) : new Multiply(b, a);
-                case DIV -> checked ? new CheckedDivide(b, a) : new Divide(b, a);
+                case PLUS -> new Add<>(b, a, type);
+                case MINUS -> new Subtract<>(b, a, type);
+                case MULTI -> new Multiply<>(b, a, type);
+                case DIV -> new Divide<>(b, a, type);
+                case MIN -> new Min<>(b, a, type);
+                case MAX -> new Max<>(b, a, type);
                 default -> throw new IllegalOperationException("Unexpected value: " + op + " at position: " + op.getPos());
             });
         } else if (isUnaryOperator(op.getType()) && !result.isEmpty()) {
-            Operation value = result.pop();
+            Operation<T> value = result.pop();
             result.push(switch (op.getType()) {
-                case NEGATE -> checked ? new CheckedNegate(value) : new UnaryMinus(value);
-                case L_ZEROES -> new L_Zeroes(value);
-                case T_ZEROES -> new T_Zeroes(value);
+                case NEGATE -> new Negate<>(value, type);
                 default -> throw new IllegalOperationException("Unexpected operator: " + op + " at position: " + op.getPos());
             });
         } else {
@@ -149,19 +146,21 @@ public class BaseParser extends BaseMethods {
                 || expression.charAt(pos + 1) == '(')) {
             throw new IllegalOperationException("Illegal operation: " + op + expression.charAt(pos + 1));
         }
-        return switch (op.toString()) {
-            case "+" -> new Operators(OperatorsEnum.PLUS, pos);
-            case "-" -> new Operators(OperatorsEnum.MINUS, pos);
-            case "*" -> new Operators(OperatorsEnum.MULTI, pos);
-            case "/" -> new Operators(OperatorsEnum.DIV, pos);
-            case "l0" -> new Operators(OperatorsEnum.L_ZEROES, pos);
-            case "t0" -> new Operators(OperatorsEnum.T_ZEROES, pos);
+        return new Operators(switch (op.toString()) {
+            case "+" -> OperatorsEnum.PLUS;
+            case "-" -> OperatorsEnum.MINUS;
+            case "*" -> OperatorsEnum.MULTI;
+            case "/" -> OperatorsEnum.DIV;
+            case "min" -> OperatorsEnum.MIN;
+            case "max" -> OperatorsEnum.MAX;
+            case "l0" -> OperatorsEnum.L_ZEROES;
+            case "t0" -> OperatorsEnum.T_ZEROES;
             default -> throw new IllegalElementException("Unexpected value: " + op);
-        };
+        }, pos);
     }
-    private void initial(final String expression, final boolean checked) {
+    private void initial(final String expression, final GenericOperation<T> type) {
         this.expression = expression;
-        this.checked = checked;
+        this.type = type;
         this.len = this.expression.length();
         this.lastElement = null;
         this.variables = List.of("x", "y", "z");

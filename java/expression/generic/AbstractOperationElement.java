@@ -1,4 +1,4 @@
-package expression;
+package expression.generic;
 
 public abstract class AbstractOperationElement<T> implements Operation<T> {
 

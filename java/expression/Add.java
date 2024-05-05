@@ -1,12 +1,11 @@
 package expression;
 
-import expression.generic.GenericOperation;
+import java.util.List;
 
+public class Add extends AbstractOperation {
 
-public class Add<T> extends AbstractBinaryOperation<T> {
-
-    public Add(Operation<T> a, Operation<T> b, GenericOperation<T> type) {
-        super(a, b, type);
+    public Add(Operation a, Operation b) {
+        super(a, b);
     }
 
     @Override
@@ -15,7 +14,12 @@ public class Add<T> extends AbstractBinaryOperation<T> {
     }
 
     @Override
-    protected T solve(T a, T b) {
-        return type.add(a, b);
+    protected int solve(int a, int b) {
+        return a + b;
+    }
+
+    @Override
+    public int evaluate(List<Integer> variables) {
+        return 0;
     }
 }

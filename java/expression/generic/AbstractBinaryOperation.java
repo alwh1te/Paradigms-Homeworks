@@ -1,6 +1,4 @@
-package expression;
-
-import expression.generic.GenericOperation;
+package expression.generic;
 
 public abstract class AbstractBinaryOperation<T> implements Operation<T> {
     private final Operation<T> a;

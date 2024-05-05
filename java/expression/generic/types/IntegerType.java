@@ -1,4 +1,4 @@
-package expression.types;
+package expression.generic.types;
 
 import expression.exceptions.*;
 import expression.generic.GenericOperation;

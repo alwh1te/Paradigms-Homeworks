@@ -1,11 +1,11 @@
 package expression;
 
-import expression.generic.GenericOperation;
+import java.util.List;
 
-public class Subtract<T> extends AbstractBinaryOperation<T> {
+public class Subtract extends AbstractOperation {
 
-    public Subtract(Operation<T> a, Operation<T> b, GenericOperation<T> type) {
-        super(a, b, type);
+    public Subtract(Operation a, Operation b) {
+        super(a, b);
     }
 
     @Override
@@ -14,8 +14,12 @@ public class Subtract<T> extends AbstractBinaryOperation<T> {
     }
 
     @Override
-    protected T solve(T a, T b) {
-        return type.subtract(a, b);
+    protected int solve(int a, int b) {
+        return a - b;
     }
 
+    @Override
+    public int evaluate(List<Integer> variables) {
+        return 0;
+    }
 }
