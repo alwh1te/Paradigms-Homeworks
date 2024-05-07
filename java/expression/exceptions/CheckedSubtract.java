@@ -3,8 +3,6 @@ package expression.exceptions;
 import expression.AbstractOperation;
 import expression.Operation;
 
-import java.util.List;
-
 public class CheckedSubtract extends AbstractOperation {
 
     public CheckedSubtract(Operation a, Operation b) {
@@ -23,10 +21,5 @@ public class CheckedSubtract extends AbstractOperation {
             throw new SubtractOverflowException("can't subtract: " + a + " - " + b);
         }
         return a - b;
-    }
-
-    @Override
-    public int evaluate(List<Integer> variables) {
-        return 0;
     }
 }

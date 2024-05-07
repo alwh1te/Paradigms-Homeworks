@@ -53,7 +53,7 @@ public class BaseParser extends BaseMethods {
                 lastElement = Types.UNARY_OPERATOR;
             } else if (isBinaryOperator(curChar)) {
                 Operators op = parseOperator(getChars(curChar));
-                while (!stack.isEmpty() && op.getType().getPriority() <= stack.peek().getType().getPriority()) {
+                while (!stack.isEmpty() && op.getType().getPriority() <= Objects.requireNonNull(stack.peek()).getType().getPriority()) {
                     solve();
                 }
                 stack.push(op);

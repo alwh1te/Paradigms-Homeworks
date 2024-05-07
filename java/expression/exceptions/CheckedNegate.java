@@ -36,6 +36,6 @@ public class CheckedNegate implements Operation {
 
     @Override
     public int evaluate(List<Integer> variables) {
-        return 0;
+        return -isIllegal(value.evaluate(variables));
     }
 }

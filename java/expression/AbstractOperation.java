@@ -1,5 +1,6 @@
 package expression;
 
+import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractOperation implements Operation {
@@ -21,6 +22,10 @@ public abstract class AbstractOperation implements Operation {
 
     protected abstract String getOperator();
     protected abstract int solve(int a, int b);
+    @Override
+    public int evaluate(List<Integer> variables) {
+        return solve(a.evaluate(variables), b.evaluate(variables));
+    }
 
     @Override
     public String toString() {

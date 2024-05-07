@@ -3,8 +3,6 @@ package expression.exceptions;
 import expression.AbstractOperation;
 import expression.Operation;
 
-import java.util.List;
-
 public class CheckedDivide extends AbstractOperation {
     public CheckedDivide(Operation a, Operation b) {
         super(a, b);
@@ -21,10 +19,5 @@ public class CheckedDivide extends AbstractOperation {
             throw new DivisionByZeroException("can't divide: " + a + " / " + b);
         }
         return a / b;
-    }
-
-    @Override
-    public int evaluate(List<Integer> variables) {
-        return 0;
     }
 }

@@ -27,6 +27,6 @@ public class UnaryMinus implements Operation  {
 
     @Override
     public int evaluate(List<Integer> variables) {
-        return 0;
+        return -value.evaluate(variables);
     }
 }

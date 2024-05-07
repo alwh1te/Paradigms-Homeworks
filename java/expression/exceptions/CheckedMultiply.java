@@ -3,8 +3,6 @@ package expression.exceptions;
 import expression.AbstractOperation;
 import expression.Operation;
 
-import java.util.List;
-
 public class CheckedMultiply extends AbstractOperation {
 
     public CheckedMultiply(Operation a, Operation b) {
@@ -25,10 +23,5 @@ public class CheckedMultiply extends AbstractOperation {
             throw new MultiplyOverflowException("can't multiply: " + a + " * " + b);
         }
         return a * b;
-    }
-
-    @Override
-    public int evaluate(List<Integer> variables) {
-        return 0;
     }
 }

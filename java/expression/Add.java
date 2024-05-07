@@ -1,7 +1,5 @@
 package expression;
 
-import java.util.List;
-
 public class Add extends AbstractOperation {
 
     public Add(Operation a, Operation b) {
@@ -16,10 +14,5 @@ public class Add extends AbstractOperation {
     @Override
     protected int solve(int a, int b) {
         return a + b;
-    }
-
-    @Override
-    public int evaluate(List<Integer> variables) {
-        return 0;
     }
 }
