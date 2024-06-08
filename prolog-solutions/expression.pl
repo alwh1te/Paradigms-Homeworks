@@ -10,12 +10,16 @@ op_subtract(A, B, operation(op_subtract, A, B)).
 op_multiply(A, B, operation(op_multiply, A, B)).
 op_divide(A, B, operation(op_divide, A, B)).
 op_negate(A, operation(op_negate, A)).
+op_sqrt(A, operation(op_sqrt, A)).
+op_square(A, operation(op_square, A)).
 
 operation(op_add, A, B, R) :- R is A + B.
 operation(op_subtract, A, B, R) :- R is A - B.
 operation(op_multiply, A, B, R) :- R is A * B.
 operation(op_divide, A, B, R) :- R is A / B.
 operation(op_negate, A, R) :- R is -A.
+operation(op_sqrt, A, R) :- R is sqrt(A).
+operation(op_square, A, R) :- R is (A * A).
 
 evaluate(const(Value), _, Value).
 evaluate(variable(Name), Vars, R) :- lookup(Name, Vars, R).
@@ -39,14 +43,16 @@ expr_p(variable(Name)) --> [Name], { member(Name, [x, y, z]) }.
 expr_p(const(Value)) -->
   { nvar(Value, number_chars(Value, Chars)) },
   digits_p(Chars),
-  { Chars = [_ | _], number_chars(Value, Chars) }.
+  { Chars = [ _ | _ ], length(Chars, R), R > 1,Chars \= ['-'], number_chars(Value, Chars) }.
 
-expr_p(operation(Op, A, B)) --> ['('], op_p(Op), [' '], expr_p(A), [' '], expr_p(B), [')'].
-expr_p(operation(Op, A)) --> ['('], op_p(Op), [' '], expr_p(A), [')'].
+expr_p(operation(Op, A, B)) --> ['('], whitespace(W1), op_p(Op), [' '], expr_p(A), [' '], expr_p(B), whitespace(W2), [')'].
+expr_p(operation(Op, A)) --> ['('], whitespace(W1), op_p(Op), [' '], expr_p(A), whitespace(W2), [')'].
+
+expr_p_extended(E) --> whitespace(W1), expr_p(E), whitespace(W2).
 
 digits_p([]) --> [].
 digits_p([H | T]) -->
-  { member(H, ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']) },
+  { member(H, ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-']) },
   [H],
   digits_p(T).
 
@@ -55,64 +61,20 @@ op_p(op_subtract) --> ['-'].
 op_p(op_multiply) --> ['*'].
 op_p(op_divide) --> ['/'].
 op_p(op_negate) --> ['n', 'e', 'g', 'a', 't', 'e'].
+op_p(op_sqrt) --> ['s', 'q', 'r', 't'].
+op_p(op_square) --> ['s', 'q', 'u', 'a', 'r', 'e'].
 
-skip_ws([], []).
-skip_ws([X|Xs], [X|Ys]) :-
-    non_whitespace(X),
-    skip_ws_helper(Xs, Ys).
+whitespace(0) --> [].
+whitespace(1) --> [' '].
 
-skip_ws([X|Xs], Ys) :-
-    whitespace(X),
-    skip_ws(Xs, Ys).
+skip_whitespaces([], []).
+skip_whitespaces([' ', ' ' | T], [' ' | R]) :- skip_whitespaces([' ' | T], [' ' | R]).
+skip_whitespaces([C | T], [C | R]) :- skip_whitespaces(T, R).
 
-skip_ws_helper([], []).
-%skip_ws_helper([' ' | Xs], Ys) :-
-%    next_non_whitespace(Xs), !,
-%    skip_ws_helper(Xs, Ys).
-
-skip_ws_helper([' ' | Xs], Ys) :-
-    skip_ws_helper(Xs, Ys).
-
-skip_ws_helper([X|Xs], [X|Ys]) :-
-    skip_ws_helper(Xs, Ys).
-
-non_whitespace(X) :- X \= ' ', X \= '\t', X \= '\n'.
-whitespace(' ').
-%whitespace('\t').
-whitespace('\n').
-
-next_non_whitespace([]) :- false.
-next_non_whitespace([' '|_]) :- false.
-next_non_whitespace([X|_]) :- non_whitespace(X).
-
-trim_whitespace(String, TrimmedString) :-
-    atom_chars(String, Chars),
-    remove_leading_spaces(Chars, TrimmedChars),
-    remove_inner_spaces(TrimmedChars, InnerTrimmedChars),
-    reverse(InnerTrimmedChars, ReversedChars),
-    remove_leading_spaces(ReversedChars, ReversedTrimmedChars),
-    remove_inner_spaces(ReversedTrimmedChars, ReversedInnerTrimmedChars),
-    reverse(ReversedInnerTrimmedChars, ReversedInnerTrimmedChars2),
-    atom_chars(TrimmedString, ReversedInnerTrimmedChars2).
-
-remove_leading_spaces([], []).
-remove_leading_spaces([' '|T], Trimmed) :-
-    remove_leading_spaces(T, Trimmed).
-remove_leading_spaces(Trimmed, Trimmed).
-
-remove_inner_spaces([], []).
-remove_inner_spaces([Space, Space|T], Trimmed) :-
-    remove_inner_spaces([Space|T], Trimmed).
-remove_inner_spaces([H|T], [H|Trimmed]) :-
-    remove_inner_spaces(T, Trimmed).
-
-% Преобразование в строку
 expr_str(E, A) :- ground(E), phrase(expr_p(E), C), atom_chars(A, C).
 expr_str(E, A) :-   atom(A), atom_chars(A, C), phrase(expr_p(E), C).
-prefix_str(E, A) :- ground(E), phrase(expr_p(E), C), atom_chars(A, C).
-%%%%prefix_str(E, A) :- atom(A), atom_chars(A, C), phrase(expr_p(E), S), !.
-prefix_str(E, A) :- atom(A), atom_chars(A, C), skip_ws(C, S), phrase(expr_p(E), S), !.
-prefix_str(E, A) :- atom(A), atom_chars(A, C), phrase(expr_p(E), C).
+prefix_str(E, A) :- ground(E), phrase(expr_p(E), C), atom_chars(A, C), !.
+prefix_str(E, A) :- atom(A), atom_chars(A, C), skip_whitespaces(C, S), phrase(expr_p_extended(E), S), !.
 example(operation(op_add,operation(op_multiply,variable(x),operation(op_subtract,variable(y),variable(z))),const(100))).
 
 
